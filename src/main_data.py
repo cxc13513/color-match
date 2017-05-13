@@ -2,7 +2,20 @@ import cluster
 import get_colorvalues
 import pdb
 import save_scraped
+import subprocess
+import sys
 import transform_final
+
+if 'darwin' in sys.platform:
+    print('Running \'caffeinate\' on MacOSX to prevent system from sleeping')
+    subprocess.Popen('caffeinate')
+
+'''The simple and most effective way to prevent Apple OSX to sleep:
+    Terminal command:   $ pmset noidle
+                        Preventing idle sleep (^C to exit)...
+The only annoying thing maybe the user self has to end this manually
+by issuing a 'Control-C'.
+'''
 
 # 1: get list of jpegs in folder
 path = "/Users/colinbottles/Desktop/Cat/school/color-match/data/raw/"
