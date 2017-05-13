@@ -1,4 +1,9 @@
 # http://scikit-learn.org/stable/auto_examples/covariance/plot_outlier_detection.html#sphx-glr-auto-examples-covariance-plot-outlier-detection-py
+# GOOD DISCUSSION OF ONE CLASS SVMs: http://rvlasveld.github.io/blog/2013/07/12/introduction-to-one-class-support-vector-machines/
+# ISOLATION FOREST:
+# http://stackoverflow.com/questions/43063031/how-to-use-isolation-forest
+# https://perso.telecom-paristech.fr/~goix/nicolas_goix_osi_presentation.pdf
+#
 '''
 ADD IN KNN
 '''

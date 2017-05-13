@@ -1,6 +1,3 @@
-# http://stackoverflow.com/questions/16381577/scikit-learn-dbscan-memory-usage
-# http://stackoverflow.com/questions/39781262/find-the-location-that-occurs-most-in-every-cluster-in-dbscan?rq=1
-# https://github.com/eriklindernoren/ML-From-Scratch/blob/master/unsupervised_learning/dbscan.py
 from matplotlib import cm
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
@@ -13,9 +10,6 @@ from PIL import Image
 import scipy.spatial
 from sklearn.cluster import DBSCAN
 
-# https://www.quora.com/What-is-a-kd-tree-and-what-is-it-used-for
-# http://groups.csail.mit.edu/graphics/classes/6.838/S98/meetings/m13/kd.html
-
 
 def dbscan_indiv_pic(pixel_values, epsilon, min_clust_size,
                      algo, dist_metric, num_jobs):
@@ -23,11 +17,8 @@ def dbscan_indiv_pic(pixel_values, epsilon, min_clust_size,
 
     INPUT:  np array
             DBSCAN parameters (eps, min_sample, algorithm, n_jobs)
-
     OUTPUT: list of arrays
             each array=set of unique RGB values in DBSCAN clusters per pic
-            optional plotting: - 3D scatter of raw pixel values (R, G, B)
-                               - 3D scatter of DBSCAN-clusters vs. noise
             Currently, no weights for clusters.
     '''
     # convert data into pandas dataframe in order to feed into DBSCAN!!
@@ -45,6 +36,7 @@ def dbscan_indiv_pic(pixel_values, epsilon, min_clust_size,
 
 
 def plot_3dclusters(db, df, plot_dbscan=False):
+    '''optional plotting: - 3D scatter of DBSCAN-clusters vs. noise'''
     if plot_dbscan is True:
         # finds unique clusters & adds to df
         labels = db.labels_
@@ -76,35 +68,3 @@ def plot_3dclusters(db, df, plot_dbscan=False):
         ax.elev = 30
         plt.title('Estimated number of clusters: %d' % (len(unique_labels)-1))
         plt.show()
-
-
-def other_dbscan(points, eps, min_pts):
-    # convert data into pandas dataframe in order to feed into DBSCAN!!
-    index = [str(i) for i in range(1, len(points)+1)]
-    col_names = ['R', 'G', 'B']
-    df = pd.DataFrame(points, index=index, columns=col_names)
-
-    tree = scipy.spatial.cKDTree(points)
-    neighbors = tree.query_ball_point(points, eps)
-    # list of (set, set)'s, to distinguish core/reachable points
-    clusters = []
-    visited = set()
-    for i in range(len(points)):
-        if i in visited:
-            continue
-        visited.add(i)
-        if len(neighbors[i]) >= min_pts:
-            clusters.append(({i}, set()))  # core
-            to_merge_in_cluster = set(neighbors[i])
-            while to_merge_in_cluster:
-                j = to_merge_in_cluster.pop()
-                if j not in visited:
-                    visited.add(j)
-                    if len(neighbors[j]) >= min_pts:
-                        to_merge_in_cluster |= set(neighbors[j])
-                if not any([j in c[0] | c[1] for c in clusters]):
-                    if len(neighbors[j]) >= min_pts:
-                        clusters[-1][0].add(j)  # core
-                    else:
-                        clusters[-1][1].add(j)  # reachable
-    return clusters, df
