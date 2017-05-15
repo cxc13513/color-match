@@ -4,15 +4,12 @@ from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import pandas as pd
-import pdb
-import pickle
-from PIL import Image
-import scipy.spatial
+# import pdb
 from sklearn.cluster import DBSCAN
 
 
 def dbscan_indiv_pic(pixel_values, epsilon, min_clust_size,
-                     algo, dist_metric, num_jobs):
+                     algo, dist_metric, num_jobs, jpg_num):
     '''Cluster each picture's set of color values.
 
     INPUT:  np array
@@ -26,12 +23,25 @@ def dbscan_indiv_pic(pixel_values, epsilon, min_clust_size,
     col_names = ['R', 'G', 'B']
     df = pd.DataFrame(pixel_values, index=index, columns=col_names)
     # fit DBSCAN for each picture:
-    db = DBSCAN(eps=epsilon, min_samples=min_clust_size,
-                algorithm=algo, metric=dist_metric, n_jobs=num_jobs)
+    if len(df) < 2500:
+        db = DBSCAN(eps=epsilon, min_samples=10, algorithm=algo,
+                    metric=dist_metric, n_jobs=num_jobs)
+    else:
+        db = DBSCAN(eps=epsilon, min_samples=min_clust_size, algorithm=algo,
+                    metric=dist_metric, n_jobs=num_jobs)
     db.fit(df)
     # print how many clusters are in this pic, ignoring noise if present.
     n_clusters_ = len(set(db.labels_)) - (1 if -1 in db.labels_ else 0)
-    print('Estimated number of clusters: %d' % n_clusters_)
+
+    if n_clusters_ == 0:
+        db = DBSCAN(eps=6, min_samples=10, algorithm=algo,
+                    metric=dist_metric, n_jobs=num_jobs)
+        db.fit(df)
+        n_clusters_ = len(set(db.labels_)) - (1 if -1 in db.labels_ else 0)
+        print('JPG %s has %d clusters' % (str(jpg_num), n_clusters_))
+
+    else:
+        print('JPG %s has %d clusters' % (str(jpg_num), n_clusters_))
     return db, df
 
 

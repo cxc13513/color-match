@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
+# import pdb
 from PIL import Image
 
 
@@ -14,18 +15,29 @@ def convert_jpg_array(jpg, downsize_factor=0.5):
     OUTPUT: np array with all raw pixel RGB values for one picture
     '''
     pict = Image.open(jpg, 'r')
+    rgb_or_not = pict.mode
     original_width, original_height = pict.size
     # downsize pict with an ANTIALIAS filter (gives the highest quality)
-    if original_width < 700 & original_height < 900:
-        downsize_factor = 1
+    if original_width < 700 | original_height < 900:
+        pict2 = pict.resize((int(original_width),
+                            int(original_height)),
+                            Image.ANTIALIAS)
     else:
-        downsize_factor = downsize_factor
-    pict = pict.resize((int(original_width*downsize_factor),
-                       int(original_height*downsize_factor)),
-                       Image.ANTIALIAS)
-    new_width, new_height = pict.size
-    pixel_values = np.array(pict.getdata())
-    return pixel_values, original_height, original_width
+        pict2 = pict.resize((int(original_width*downsize_factor),
+                            int(original_height*downsize_factor)),
+                            Image.ANTIALIAS)
+    new_width, new_height = pict2.size
+    pixel_values = np.array(pict2.getdata())
+    return pixel_values, rgb_or_not
+
+
+def get_baseline_arr(pixel_values):
+    '''Calcs average R, G, B across one image as baseline.'''
+    mean_R = np.mean(pixel_values[:, 0])
+    mean_G = np.mean(pixel_values[:, 1])
+    mean_B = np.mean(pixel_values[:, 2])
+    baseline_arr = np.array([[mean_R, mean_G, mean_B]])
+    return baseline_arr
 
 
 def plot_3dscatter_raw(pixel_values, plot_3dscatter=False):
@@ -47,12 +59,3 @@ def plot_3dscatter_raw(pixel_values, plot_3dscatter=False):
         ax.azim = -160
         ax.elev = 30
         plt.show()
-
-
-def get_baseline_arr(pixel_values):
-    '''Calcs average R, G, B across one image as baseline.'''
-    mean_R = np.mean(pixel_values[:, 0])
-    mean_G = np.mean(pixel_values[:, 1])
-    mean_B = np.mean(pixel_values[:, 2])
-    baseline_arr = np.array([[mean_R, mean_G, mean_B]])
-    return baseline_arr
