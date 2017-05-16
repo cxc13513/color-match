@@ -16,21 +16,23 @@ by issuing a 'Control-C'.
 '''
 
 # 1: get list of jpegs in folder
-path = "/Users/colinbottles/Desktop/Cat/school/color-match/data/raw/"
-jpg_list = save_scraped.get_files_in_folder(path)
+path = "/Users/colinbottles/Desktop/Cat/school/color-match/data/testing/"
+jpg_testing = save_scraped.get_files_in_folder(path)
 
-# 1-small: use small list of jpegs for now
-jpg_list_small = [
-    '/Users/colinbottles/Desktop/Cat/school/color-match/data/raw/1301.jpg',
-    '/Users/colinbottles/Desktop/Cat/school/color-match/data/raw/1302.jpg']
+# 1-testing: crunch thru testing sample of jpegs here to see if run faster
+jpg_small_testing = [
+    '/Users/colinbottles/Desktop/Cat/school/color-match/data/testing/bad1.jpg',
+    '/Users/colinbottles/Desktop/Cat/school/color-match/data/testing/bad2.jpg']
 
 # 2: create empty list to hold final data.
 X_clustered = []
 X_baseline = []
 list_jpgs_covered = []
+
 # 3: loop over all functions for each jpg to get final data for each jpg
-for index, jpg in enumerate(jpg_list):
+for index, jpg in enumerate(jpg_testing):
     # 3a: converts jpg to np array
+    print('converts jpg to np array')
     pixel_values, rgb_or_not = get_colorvalues.convert_jpg_array(jpg,
                                                                  downsize_factor=0.5)
     # make sure the jpg is RGB, not b&w:
@@ -38,10 +40,10 @@ for index, jpg in enumerate(jpg_list):
 
         # 3b: plots raw pixel values
         # get_colorvalues.plot_3dscatter_raw(pixel_values, plot_3dscatter=True)
-
+        print('get baseline')
         # 3c: save down simple averaged pixel_values for baseline model
         X_baseline.append(get_colorvalues.get_baseline_arr(pixel_values))
-
+        print('cluster')
         # 3d: clusters raw pixel values & keeps just the ones need
         csind, labels, raw_df = cluster.dbscan_indiv_pic(pixel_values,
                                                          epsilon=3,
@@ -53,7 +55,7 @@ for index, jpg in enumerate(jpg_list):
 
         # 3e: plots clusters
         # cluster.plot_3dclusters(fitted_dbscan, raw_df, plot_dbscan=True)
-
+        print('final transform')
         # 3f: transforms clustered pixel values into final format
         arr_one_color_combo = transform_final.create_final_X_dataset(csind,
                                                                      labels,
@@ -70,9 +72,9 @@ for index, jpg in enumerate(jpg_list):
 
 # 4: pickle X_clustered & X_baseline
 filepath = '/Users/colinbottles/Desktop/Cat/school/color-match/data/processed/'
-filename = 'pickled_list_arr'
-basename = 'pickled_list_arr_baseline'
-order = 'pickled_jpg_order'
-pickled_clustered_path = transform_final.pick(X_clustered, filename, filepath)
-pickled_baseline_path = transform_final.pick(X_baseline, basename, filepath)
-pickled_order_path = transform_final.pick(list_jpgs_covered, order, filepath)
+filename = 'pickled_testing_arr'
+basename = 'pickled_testing_arr_baseline'
+order = 'pickled_testing_order'
+testing_clustered_path = transform_final.pick(X_clustered, filename, filepath)
+testing_baseline_path = transform_final.pick(X_baseline, basename, filepath)
+testing_order_path = transform_final.pick(list_jpgs_covered, order, filepath)

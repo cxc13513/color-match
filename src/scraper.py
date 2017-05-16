@@ -1,10 +1,5 @@
 from bs4 import BeautifulSoup
-from lxml import html
-import os
-import pdb
 import save_scraped
-from selenium import webdriver
-import sys
 from urllib.request import urlopen
 
 
@@ -56,10 +51,12 @@ for n in range(1, 19):
 
 # once have scraped urls:
 # set folder path to save pics from natgeo urls
-path = "/Users/colinbottles/Desktop/Cat/school/color-match/data/"
-# save down each set of pics from urls scrubbed (sep bc may have diff formats)
-
-# already saved down, don't call again:
+path = "/Users/colinbottles/Desktop/Cat/school/color-match/data/raw/"
+# need to de-duplicate the links!!!!
+all_list = list(set(urls_list)) + list(set(urls_list2)) + list(set(urls_list3))
+print(len(all_list))
+# save down de-duped list
+save_scraped.save_down_pics_from_links(all_list, path)
 # # saved down 15 pics from here
 # save_scraped.save_down_pics_from_links(urls_list, path)
 # # saved down 964 pics from here

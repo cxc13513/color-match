@@ -18,18 +18,17 @@ def unpick(pickled_name_path):
     return final_df
 
 
-def create_final_X_dataset(db, df):
+def create_final_X_dataset(csind, labels, df):
     '''Extracts most frequent RGB values from each cluster.
 
     INPUT: pandas dataframe, fitted dbscan
     OUTPUT: numpy array
     '''
     # save down labels attribute, convert to pd series & add to df
-    labels = db.labels_
     df['cluster_num'] = pd.Series(labels.tolist()).values
     # create mask for whether obvs is a core sample
-    core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
-    core_samples_mask[db.core_sample_indices_] = True
+    core_samples_mask = np.zeros_like(labels, dtype=bool)
+    core_samples_mask[csind] = True
     # make 2 new smaller dfs with only obvs tied to non-noisy clusters
     X = np.array(df)
     subset = X[core_samples_mask]
@@ -45,4 +44,10 @@ def create_final_X_dataset(db, df):
     subset_df_w_clust['count'] = subset_df_w_clust.groupby(['Clust', 'combined'])['combined'].transform('count')
     # extract most frequent R,G,B per cluster
     color_combo_arr = subset_df_w_clust[['R', 'G', 'B']].iloc[subset_df_w_clust.groupby(['Clust']).apply(lambda x: x['count'].idxmax())].as_matrix()
+
+    # delete manually all unnecessary dfs
+    to_delete = [df, X, subset2, subset_df_w_clust]
+    del to_delete
+
+    # return the only big thing left
     return color_combo_arr

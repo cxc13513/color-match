@@ -1,5 +1,6 @@
 from matplotlib import cm
 import matplotlib.pyplot as plt
+# from memory_profiler import profile
 from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
@@ -25,24 +26,28 @@ def dbscan_indiv_pic(pixel_values, epsilon, min_clust_size,
     # fit DBSCAN for each picture:
     if len(df) < 2500:
         db = DBSCAN(eps=epsilon, min_samples=10, algorithm=algo,
-                    metric=dist_metric, n_jobs=num_jobs)
+                    metric=dist_metric)
     else:
         db = DBSCAN(eps=epsilon, min_samples=min_clust_size, algorithm=algo,
-                    metric=dist_metric, n_jobs=num_jobs)
-    db.fit(df)
-    # print how many clusters are in this pic, ignoring noise if present.
-    n_clusters_ = len(set(db.labels_)) - (1 if -1 in db.labels_ else 0)
-
-    if n_clusters_ == 0:
-        db = DBSCAN(eps=6, min_samples=10, algorithm=algo,
-                    metric=dist_metric, n_jobs=num_jobs)
-        db.fit(df)
+                    metric=dist_metric)
+    db.fit(pixel_values)
+    labels = db.labels_
+    n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+    while n_clusters_ < 2:
+        epsilon += 1
+        db = DBSCAN(eps=epsilon, min_samples=10, algorithm=algo,
+                    metric=dist_metric)
+        db.fit(pixel_values)
         n_clusters_ = len(set(db.labels_)) - (1 if -1 in db.labels_ else 0)
-        print('JPG %s has %d clusters' % (str(jpg_num), n_clusters_))
+        print('JPG %s has %d clusters and %d epsilon' % (str(jpg_num),
+                                                         n_clusters_, epsilon))
 
     else:
         print('JPG %s has %d clusters' % (str(jpg_num), n_clusters_))
-    return db, df
+
+    # also save down core sample indices to return
+    core_sample_indices = db.core_sample_indices_
+    return core_sample_indices, labels, df
 
 
 def plot_3dclusters(db, df, plot_dbscan=False):

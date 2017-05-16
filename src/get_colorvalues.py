@@ -17,17 +17,13 @@ def convert_jpg_array(jpg, downsize_factor=0.5):
     pict = Image.open(jpg, 'r')
     rgb_or_not = pict.mode
     original_width, original_height = pict.size
-    # downsize pict with an ANTIALIAS filter (gives the highest quality)
-    if original_width < 700 | original_height < 900:
-        pict2 = pict.resize((int(original_width),
-                            int(original_height)),
-                            Image.ANTIALIAS)
+    if original_width < 400:
+        pict = pict
     else:
-        pict2 = pict.resize((int(original_width*downsize_factor),
-                            int(original_height*downsize_factor)),
-                            Image.ANTIALIAS)
-    new_width, new_height = pict2.size
-    pixel_values = np.array(pict2.getdata())
+        pict = pict.resize((int(original_width*downsize_factor),
+                            int(original_height*downsize_factor)))
+    new_width, new_height = pict.size
+    pixel_values = np.array(pict.getdata())
     return pixel_values, rgb_or_not
 
 
