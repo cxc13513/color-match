@@ -21,8 +21,7 @@ jpg_testing = save_scraped.get_files_in_folder(path)
 
 # 1-testing: crunch thru testing sample of jpegs here to see if run faster
 jpg_small_testing = [
-    '/Users/colinbottles/Desktop/Cat/school/color-match/data/testing/bad1.jpg',
-    '/Users/colinbottles/Desktop/Cat/school/color-match/data/testing/bad2.jpg']
+    '/Users/colinbottles/Desktop/Cat/school/color-match/data/testing/bad4.jpg']
 
 # 2: create empty list to hold final data.
 X_clustered = []
@@ -32,18 +31,17 @@ list_jpgs_covered = []
 # 3: loop over all functions for each jpg to get final data for each jpg
 for index, jpg in enumerate(jpg_testing):
     # 3a: converts jpg to np array
-    print('converts jpg to np array')
     pixel_values, rgb_or_not = get_colorvalues.convert_jpg_array(jpg,
-                                                                 downsize_factor=0.5)
+                                                                 downsize_factor=0.25)
     # make sure the jpg is RGB, not b&w:
     if rgb_or_not == 'RGB':
 
         # 3b: plots raw pixel values
         # get_colorvalues.plot_3dscatter_raw(pixel_values, plot_3dscatter=True)
-        print('get baseline')
+
         # 3c: save down simple averaged pixel_values for baseline model
         X_baseline.append(get_colorvalues.get_baseline_arr(pixel_values))
-        print('cluster')
+
         # 3d: clusters raw pixel values & keeps just the ones need
         csind, labels, raw_df = cluster.dbscan_indiv_pic(pixel_values,
                                                          epsilon=3,
@@ -55,7 +53,7 @@ for index, jpg in enumerate(jpg_testing):
 
         # 3e: plots clusters
         # cluster.plot_3dclusters(fitted_dbscan, raw_df, plot_dbscan=True)
-        print('final transform')
+
         # 3f: transforms clustered pixel values into final format
         arr_one_color_combo = transform_final.create_final_X_dataset(csind,
                                                                      labels,

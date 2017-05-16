@@ -35,13 +35,16 @@ def dbscan_indiv_pic(pixel_values, epsilon, min_clust_size,
     n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
     while n_clusters_ < 2:
         epsilon += 1
-        db = DBSCAN(eps=epsilon, min_samples=10, algorithm=algo,
-                    metric=dist_metric)
-        db.fit(pixel_values)
-        n_clusters_ = len(set(db.labels_)) - (1 if -1 in db.labels_ else 0)
-        print('JPG %s has %d clusters and %d epsilon' % (str(jpg_num),
-                                                         n_clusters_, epsilon))
-
+        if epsilon < 15:
+            db = DBSCAN(eps=epsilon, min_samples=10, algorithm=algo,
+                        metric=dist_metric)
+            db.fit(pixel_values)
+            n_clusters_ = len(set(db.labels_)) - (1 if -1 in db.labels_ else 0)
+            print('JPG %s has %d clusters and %d epsilon' % (str(jpg_num),
+                                                             n_clusters_,
+                                                             epsilon))
+        else:
+            break
     else:
         print('JPG %s has %d clusters' % (str(jpg_num), n_clusters_))
 
