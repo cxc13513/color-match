@@ -1,3 +1,4 @@
+# import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d import Axes3D
@@ -36,6 +37,22 @@ def get_baseline_arr(pixel_values):
     return baseline_arr
 
 
+def rgb_to_hex(red, green, blue):
+    """Return color as #rrggbb for the given color values."""
+    return '#%02x%02x%02x' % (red, green, blue)
+
+
+def convert_to_hex(arr):
+    """Return list of colors as #rrggbb for the given color values."""
+    list_hex = []
+    for i in range(len(arr)):
+        red = int(np.array(arr[i]).tolist()[0])
+        green = int(np.array(arr[i]).tolist()[1])
+        blue = int(np.array(arr[i]).tolist()[2])
+        list_hex.append(str.upper('#%02x%02x%02x' % (red, green, blue)))
+    return list_hex
+
+
 def plot_3dscatter_raw(pixel_values, plot_3dscatter=False):
     '''optional plotting: - 3D scatter of raw pixel values (R, G, B)'''
     if plot_3dscatter is True:
@@ -50,7 +67,7 @@ def plot_3dscatter_raw(pixel_values, plot_3dscatter=False):
         # plot 3d scatter of pixel_values
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
-        ax.scatter3D(r, g, b, c=b, s=0.01, alpha=0.01)
+        ax.scatter3D(r, g, b, c=b, s=0.1, alpha=0.1)
         # Set viewpoint/title
         ax.azim = -160
         ax.elev = 30

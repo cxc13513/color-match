@@ -14,6 +14,9 @@ from flask import url_for
 import os
 from werkzeug import secure_filename
 
+''' look at later
+http://htmlcolorcodes.com/resources/ultimate-guide-to-free-stock-photos/
+'''
 # to run:
 '''
 to run, use commands below:
@@ -63,8 +66,9 @@ def upload():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # Redirect the user to the uploaded_file route, which
         # will basicaly show on the browser the uploaded file
-        return redirect(url_for('uploaded_file',
-                                filename=filename))
+        # return redirect(url_for('uploaded_file',
+        #                         filename=filename))
+        return render_template('results.html')
 
 
 # This route is expecting a parameter containing the name

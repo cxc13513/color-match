@@ -1,5 +1,6 @@
 
 import numpy as np
+import pdb
 from scipy.spatial.distance import seuclidean
 from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.metrics import silhouette_samples
@@ -18,6 +19,7 @@ def calc_silhouette_score(arr1, arr2):
     row = y_comb.shape[0]
     labels = y_comb.reshape(row, )
     X = np.vstack((arr1, arr2))
+    # pdb.set_trace()
     score = silhouette_score(X, labels, metric='euclidean') + 1
     return score
 

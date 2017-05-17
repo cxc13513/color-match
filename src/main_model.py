@@ -39,10 +39,10 @@ list_scores_base = []
 new_image_barr_cl = test_baseline[test_photo_number]
 for barr in list_baseline:
     if len(new_image_barr_cl) == 1 & len(barr) == 1:
+        '''workaround for when both clusters are just points,
+           then silhouette doesnt work obvs'''
         baseline_score = silhouette.calc_distance(barr, new_image_barr_cl)
         list_scores_base.append(baseline_score)
-        '''have to figure out workaround for when both clusters are just points,
-        then silhouette doesnt work obvs'''
     else:
         baseline_score = silhouette.calc_silhouette_score(barr,
                                                           new_image_barr_cl)
