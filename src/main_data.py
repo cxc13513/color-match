@@ -45,7 +45,7 @@ for index, jpg in enumerate(jpg_list):
         # 3d: clusters raw pixel values & keeps just the ones need
         csind, labels, raw_df = cluster.dbscan_indiv_pic(pixel_values,
                                                          epsilon=3,
-                                                         min_clust_size=300,
+                                                         min_clust_size=10,
                                                          algo='ball_tree',
                                                          dist_metric='euclidean',
                                                          num_jobs=2,

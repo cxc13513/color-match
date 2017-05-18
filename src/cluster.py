@@ -27,13 +27,13 @@ def dbscan_indiv_pic(pixel_values, epsilon, min_clust_size,
                 metric=dist_metric)
     db.fit(pixel_values)
     n_clusters_ = len(set(db.labels_)) - (1 if -1 in db.labels_ else 0)
-    print('jpg%s has %d clust, %d clust_s, %d eps' % (str(jpg_num),
-                                                      n_clusters_,
-                                                      min_clust_size,
-                                                      epsilon))
 
     if n_clusters_ > 5:
         core_sample_indices = db.core_sample_indices_
+        print('jpg%s has %d clust, %d clust_s, %d eps' % (str(jpg_num),
+                                                          n_clusters_,
+                                                          min_clust_size,
+                                                          epsilon))
         return core_sample_indices, db.labels_, df
 
     else:

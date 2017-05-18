@@ -11,6 +11,7 @@ from flask import render_template
 from flask import request
 from flask import send_from_directory
 from flask import url_for
+import main_uploaded
 import os
 from werkzeug import secure_filename
 
@@ -66,19 +67,33 @@ def upload():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # Redirect the user to the uploaded_file route, which
         # will basicaly show on the browser the uploaded file
-        return redirect(url_for('uploaded_file',
-                                filename=filename))
-        # return render_template('results.html')
+        # return redirect(url_for('uploaded_file',
+        #                         filename=filename))
+        return redirect(url_for('results'))
+
+
+# This route will show a form to perform an AJAX request
+# jQuery is loaded to execute the request and update the
+# value of the operation
+@app.route('/', methods=['GET'])
+def results():
+    path = '/Users/colinbottles/Desktop/Cat/school/color-match/uploads/'
+    results = main_uploaded.analyzer(path)
+    return render_template('results.html', analysis=results)
 
 
 # This route is expecting a parameter containing the name
 # of a file. Then it will locate that file on the upload
 # directory and show it on the browser, so if the user uploads
-# an image, that image is going to be show after the upload
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+# an image, that image is going to be shown after the upload
+# @app.route('/uploads/<filename>')
+# def uploaded_file(filename):
+#     path = '/Users/colinbottles/Desktop/Cat/school/color-match/uploads/'
+#     results = main_uploaded.analyzer(path+filename)
+#     return render_template('results.html', analysis=results)
+    # return render_template('results.html')
+    # return send_from_directory(app.config['UPLOAD_FOLDER'],
+    #                            filename)
 
 if __name__ == '__main__':
     app.run(
