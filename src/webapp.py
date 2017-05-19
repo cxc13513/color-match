@@ -9,7 +9,6 @@ from flask import Flask
 from flask import redirect
 from flask import render_template
 from flask import request
-from flask import send_from_directory
 from flask import url_for
 import main_uploaded
 import os
@@ -34,7 +33,8 @@ look at: address
 app = Flask(__name__)
 
 # This is the path to the upload directory
-app.config['UPLOAD_FOLDER'] = '/Users/colinbottles/Desktop/Cat/school/color-match/uploads'
+dirpath = '/Users/colinbottles/Desktop/Cat/school/color-match/uploads'
+app.config['UPLOAD_FOLDER'] = dirpath
 # These are the extension that we are accepting to be uploaded
 app.config['ALLOWED_EXTENSIONS'] = set(['jpg'])
 
@@ -45,9 +45,8 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 
-# This route will show a form to perform an AJAX request
-# jQuery is loaded to execute the request and update the
-# value of the operation
+# This route will show the initial user submit form to perform an AJAX request
+# jQuery is loaded to execute the request and update the value of the operation
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -65,35 +64,20 @@ def upload():
         # Move the file form the temporal folder to
         # the upload folder we setup
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # Redirect the user to the uploaded_file route, which
-        # will basicaly show on the browser the uploaded file
-        # return redirect(url_for('uploaded_file',
-        #                         filename=filename))
+        # Redirect the user to the results route, which
+        # will show on the browser the model output
         return redirect(url_for('results'))
 
 
-# This route will show a form to perform an AJAX request
-# jQuery is loaded to execute the request and update the
-# value of the operation
-@app.route('/', methods=['GET'])
+# This route will show the results form that displays the model output
+# in a user friendly format
+@app.route('/results', methods=['GET'])
 def results():
     path = '/Users/colinbottles/Desktop/Cat/school/color-match/uploads/'
-    results = main_uploaded.analyzer(path)
-    return render_template('results.html', analysis=results)
-
-
-# This route is expecting a parameter containing the name
-# of a file. Then it will locate that file on the upload
-# directory and show it on the browser, so if the user uploads
-# an image, that image is going to be shown after the upload
-# @app.route('/uploads/<filename>')
-# def uploaded_file(filename):
-#     path = '/Users/colinbottles/Desktop/Cat/school/color-match/uploads/'
-#     results = main_uploaded.analyzer(path+filename)
-#     return render_template('results.html', analysis=results)
-    # return render_template('results.html')
-    # return send_from_directory(app.config['UPLOAD_FOLDER'],
-    #                            filename)
+    clust_pred, base_pred, sugg1, sugg2, suggb = main_uploaded.analyzer(path)
+    return render_template('results.html', clust_pred=clust_pred,
+                           base_pred=base_pred, sugg1=sugg1,
+                           sugg2=sugg2, suggb=suggb)
 
 if __name__ == '__main__':
     app.run(
