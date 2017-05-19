@@ -27,7 +27,7 @@ def analyzer(path):
     # path = "/Users/colinbottles/Desktop/Cat/school/color-match/uploads/"
     jpg_uploaded = save_scraped.get_files_in_folder(path)
     try:
-        jpg_uploaded.remove('/Users/colinbottles/Desktop/Cat/school/color-match/uploads/.DS_Store')
+        jpg_uploaded.remove(path+'.DS_Store')
     except ValueError:
         pass
     else:
@@ -134,15 +134,15 @@ def analyzer(path):
     # REQUIRES TWO PHOTOS TO BE UPLOADED BY USER VIA WEBAPP
     lowest_score_cl = score_comparison['clustered'].min()
     if lowest_score_cl > 1.09:
-        clustered_prediction = 'Palette is not appealing'
+        clustered_prediction = 'Clustered Prediction: Palette is not appealing'
     else:
-        clustered_prediction = 'Palette is appealing'
+        clustered_prediction = 'Clustered Prediction: Palette is appealing'
     # FOR PRESENTATION - DEFEND WHY NOT GO WITH SIMPLE BASELINE:
     lowest_score_base = score_comparison['baseline'].min()
     if lowest_score_base > 1.09:
-        baseline_prediction = 'Palette is not appealing'
+        baseline_prediction = 'Baseline prediction: Palette is not appealing'
     else:
-        baseline_prediction = 'Palette is appealing'
+        baseline_prediction = 'Baseline prediction: Palette is appealing'
 
     # 8B: suggested appealing palette(s) (using the lowest score(s))
         # REQUIRES ONLY ONE PHOTO TO BE UPLOADED BY USER VIA WEBAPP
@@ -177,24 +177,24 @@ def analyzer(path):
 
     # 9A: create dynamic html ready tables for suggested palettes
     # using lowest score(s)
-    colors1 = make_app_ready_results.table_ready(list_msug)
+    colors1 = make_app_ready_results.table_ready_2loops(list_msug)
     sugg1 = make_app_ready_results.html_ready(list_col1=colors1,
                                               name_col1='colors',
                                               dtype_col1='str',
-                                              list_col2=list_msug,
+                                              list_col2=list_msug[0],
                                               name_col2='codes',
                                               dtype_col2='str')
     # using score(s) around 1
-    colors2 = make_app_ready_results.table_ready(list_m2sug)
+    colors2 = make_app_ready_results.table_ready_2loops(list_m2sug)
     sugg2 = make_app_ready_results.html_ready(list_col1=colors2,
                                               name_col1='colors',
                                               dtype_col1='str',
-                                              list_col2=list_m2sug,
+                                              list_col2=list_m2sug[0],
                                               name_col2='codes',
                                               dtype_col2='str')
 
     # 9B: create dynamic html ready table for user uploaded base palette
-    colorsb = make_app_ready_results.table_ready(list_hex_uploaded_arr)
+    colorsb = make_app_ready_results.table_ready_1loop(list_hex_uploaded_arr)
     suggb = make_app_ready_results.html_ready(list_col1=colorsb,
                                               name_col1='colors',
                                               dtype_col1='str',

@@ -15,29 +15,29 @@
     <p>{{ clust_pred }}</p>
     <p>{{ base_pred }}</p>
 
-    <table>
+    <table cellpadding="2" border="1" bordercolor="#999999" bordercolorlight="#FFFFFF" style="margin-top:12px;width:500px;background-color:#fff;">
     <thead><tr><th>Palette</th><th>Suggestions (lowest score)</th></tr></thead>
     <tbody>
-
     {% for row in sugg1 %}
         <tr><td style={{ row['colors'] }}></td><td>{{ row['codes'] }}</td></tr>
     {% endfor %}
+    </tbody>
 
-    <table>
+    <table cellpadding="2" border="1" bordercolor="#999999" bordercolorlight="#FFFFFF" style="margin-top:12px;width:500px;background-color:#fff;">
     <thead><tr><th>Palette</th><th>Suggestions (score around 1)</th></tr></thead>
     <tbody>
-
     {% for row in sugg2 %}
         <tr><td style={{ row['colors'] }}></td><td>{{ row['codes'] }}</td></tr>
     {% endfor %}
+    </tbody>
 
-    <table>
+    <table cellpadding="2" border="1" bordercolor="#999999" bordercolorlight="#FFFFFF" style="margin-top:12px;width:500px;background-color:#fff;">
     <thead><tr><th>Palette</th><th>Your uploaded base palette</th></tr></thead>
     <tbody>
-
     {% for row in suggb %}
         <tr><td style={{ row['colors'] }}></td><td>{{ row['codes'] }}</td></tr>
     {% endfor %}
+    </tbody>
 
     <table cellpadding="2" border="1" bordercolor="#999999" bordercolorlight="#FFFFFF" style="margin-top:12px;width:500px;background-color:#fff;">
         <tr>
