@@ -11,49 +11,44 @@
 
 <body>
 
-    <h1><strong>Naturally Appealing Palettes: Results</strong></h1>
-    <p>{{ clust_pred }}</p>
-    <p>{{ base_pred }}</p>
+    <h1><strong>Naturally Appealing Palettes Suggestions</strong></h1>
 
-    <table cellpadding="2" border="1" bordercolor="#999999" bordercolorlight="#FFFFFF" style="margin-top:12px;width:500px;background-color:#fff;">
-    <thead><tr><th>Palette</th><th>Suggestions (lowest score)</th></tr></thead>
-    <tbody>
-    {% for row in sugg1 %}
-        <tr><td style={{ row['colors'] }}></td><td>{{ row['codes'] }}</td></tr>
-    {% endfor %}
-    </tbody>
+    <h1>Suggested complimentary palette (score ~ 1)</h1>
 
-    <table cellpadding="2" border="1" bordercolor="#999999" bordercolorlight="#FFFFFF" style="margin-top:12px;width:500px;background-color:#fff;">
-    <thead><tr><th>Palette</th><th>Suggestions (score around 1)</th></tr></thead>
+    <table cellpadding="1" bordercolor="#FFFFFF" bordercolorlight="#FFFFFF">
+    <thead><tr><th width='60'></th></tr></thead>
     <tbody>
     {% for row in sugg2 %}
-        <tr><td style={{ row['colors'] }}></td><td>{{ row['codes'] }}</td></tr>
+        <tr height='60'><td style={{ row['name_col1'] }}></td><td>{{ row['name_col2'] }}</td></tr>
     {% endfor %}
     </tbody>
+    </table>
 
-    <table cellpadding="2" border="1" bordercolor="#999999" bordercolorlight="#FFFFFF" style="margin-top:12px;width:500px;background-color:#fff;">
-    <thead><tr><th>Palette</th><th>Your uploaded base palette</th></tr></thead>
+    <h1>Your uploaded base palette</h1>
+
+    <table cellpadding="1" bordercolor="#FFFFFF" bordercolorlight="#FFFFFF">
+    <thead><tr><th width='60'></th><th></th></tr></thead>
     <tbody>
     {% for row in suggb %}
-        <tr><td style={{ row['colors'] }}></td><td>{{ row['codes'] }}</td></tr>
+        <tr height='60'><td style={{ row['name_col1'] }}></td><td>{{ row['name_col2'] }}</td></tr>
     {% endfor %}
     </tbody>
+    </table>
 
-    <table cellpadding="2" border="1" bordercolor="#999999" bordercolorlight="#FFFFFF" style="margin-top:12px;width:500px;background-color:#fff;">
-        <tr>
-            <td><strong>Your Base Palette</strong></td>
-            <td><strong>HEX</strong></td>
-            <td><strong>R</strong></td>
-            <td><strong>G</strong></td>
-            <td><strong>B</strong></td>
-        </tr>
-        <tr>
-            <td>Yellow C</td>
-            <td width="150" style="background-color:#E0653B;">#E0653B</td>
-            <td style="color:#FFF;background-color:rgb(254,0,0);">254</td>
-            <td style="color:#FFF;background-color:rgb(0,221,0);">221</td>
-            <td style="color:#FFF;background-color:rgb(0,0,0);">0</td>
-        </tr>
+    <h1>Suggested complimentary palette (score ~ 0)</h1>
+
+    <table cellpadding="1" bordercolor="#FFFFFF" bordercolorlight="#FFFFFF">
+    <thead><tr><th width='60'></th><th></th></tr></thead>
+    <tbody>
+    {% for row in sugg1 %}
+        <tr height='60'><td style={{ row['name_col1'] }}></td><td>{{ row['name_col2'] }}</td></tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+    <h1>Prediction</h1>
+    <p>{{ clust_pred }}</p>
+    <p>{{ base_pred }}</p>
 
 </body>
 

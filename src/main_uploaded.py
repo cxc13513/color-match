@@ -165,6 +165,7 @@ def analyzer(path):
     # REQUIRES ONLY ONE PHOTO TO BE UPLOADED BY USER VIA WEBAPP
     # de-duplicate hex_codes already in user uploaded clustered palette
     m2sug = score_comparison.query('0.95 <= clustered <= 1.09').sort_values(['clustered']).head(1).hex_clustered.values.tolist()
+
     list_m2sug = []
     for num in range(len(m2sug)):
         entire = m2sug[num].split("['")[-1].split("']")[0].split("', '")
@@ -184,6 +185,8 @@ def analyzer(path):
                                               list_col2=list_msug[0],
                                               name_col2='codes',
                                               dtype_col2='str')
+    # sugg1 = sorted(sugg1, key=itemgetter('name_col1'), reverse=False)
+
     # using score(s) around 1
     colors2 = make_app_ready_results.table_ready_2loops(list_m2sug)
     sugg2 = make_app_ready_results.html_ready(list_col1=colors2,
@@ -192,6 +195,7 @@ def analyzer(path):
                                               list_col2=list_m2sug[0],
                                               name_col2='codes',
                                               dtype_col2='str')
+    # sugg2 = sorted(sugg2, key=itemgetter('name_col1'), reverse=False)
 
     # 9B: create dynamic html ready table for user uploaded base palette
     colorsb = make_app_ready_results.table_ready_1loop(list_hex_uploaded_arr)
@@ -201,6 +205,7 @@ def analyzer(path):
                                               list_col2=list_hex_uploaded_arr,
                                               name_col2='codes',
                                               dtype_col2='str')
+    # suggb = sorted(suggb, key=itemgetter('name_col1'), reverse=False)
 
     # 10: RETURN!!
     return clustered_prediction, baseline_prediction, sugg1, sugg2, suggb
