@@ -9,6 +9,7 @@ from flask import Flask
 from flask import redirect
 from flask import render_template
 from flask import request
+from flask import session
 from flask import url_for
 import main_uploaded
 import os
@@ -20,13 +21,7 @@ http://htmlcolorcodes.com/resources/ultimate-guide-to-free-stock-photos/
 # to run:
 '''
 to run, use commands below:
-    export FLASK_APP=webapp.py
-    flask run
-
-will return:
-    Running on http://127.0.0.1:5000/
-
-look at: address
+    python src/webapp.py
 '''
 
 # Initialize the Flask application
@@ -74,16 +69,18 @@ def upload():
 @app.route('/results', methods=['GET'])
 def results():
     path = '/Users/colinbottles/Desktop/Cat/school/color-match/uploads/'
-    clust_pred, base_pred, sugg1, sugg2, suggb = main_uploaded.analyzer(path)
-    return render_template('results.html', clust_pred=clust_pred,
-                           base_pred=base_pred, sugg1=sugg1,
-                           sugg2=sugg2, suggb=suggb)
+    clust_pred, suggbf, sugg1, sugg2, suggb = main_uploaded.analyzer(path)
+    return render_template('results.html',
+                           clust_pred=clust_pred, suggbf=suggbf,
+                           sugg1=sugg1, sugg2=sugg2,
+                           suggb=suggb)
 
 if __name__ == '__main__':
     app.jinja_env.auto_reload = True
     app.config['TEMPLATES_AUTO_RELOAD'] = True
+    port = 5000
     app.run(
         host="0.0.0.0",
-        port=int("80"),
+        port=port,
         debug=True
     )

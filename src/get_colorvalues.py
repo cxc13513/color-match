@@ -1,9 +1,11 @@
 # import matplotlib.colors as colors
+# from matplotlib import cm
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
-# import pdb
+import pandas as pd
+import pdb
 from PIL import Image
 
 
@@ -35,6 +37,25 @@ def get_baseline_arr(pixel_values):
     mean_B = np.mean(pixel_values[:, 2])
     baseline_arr = np.array([[mean_R, mean_G, mean_B]])
     return baseline_arr
+
+
+def get_freq_arr(pixel_values):
+    '''Keeps top 15 most frequent R, G, B values from one image as baseline.'''
+    clust = np.ones((len(pixel_values), 1))
+    subset_df_w_clust = pd.DataFrame({'R': pixel_values[:, 0],
+                                      'G': pixel_values[:, 1],
+                                      'B': pixel_values[:, 2],
+                                      'Clust': clust[:, 0]})
+    # create single combination RGB in order to find the most frequent
+    subset_df_w_clust['combined'] = subset_df_w_clust.R.astype(str).str.cat(subset_df_w_clust.G.astype(str), sep='-').str.cat(subset_df_w_clust.B.astype(str), sep='-')
+    # find most frequent RGB in each cluster
+    subset_df_w_clust['count'] = subset_df_w_clust.groupby(['Clust', 'combined'])['combined'].transform('count')
+    # extract most frequent R,G,B per cluster
+    subset_df_w_clust.drop_duplicates(['combined'], inplace=True)
+    newdf = subset_df_w_clust.sort_values(['count']).tail(15).reset_index(drop=True)
+    newdf = newdf[['R', 'G', 'B']]
+    color_combo_arr = newdf.as_matrix()
+    return color_combo_arr
 
 
 def rgb_to_hex(red, green, blue):
@@ -70,5 +91,6 @@ def plot_3dscatter_raw(pixel_values, plot_3dscatter=False):
         ax.scatter3D(r, g, b, c=b, s=0.1, alpha=0.1)
         # Set viewpoint/title
         ax.azim = -160
-        ax.elev = 30
+        ax.elev = 15
         plt.show()
+        plt.close(fig)

@@ -1,4 +1,5 @@
 import cluster
+import colorsys
 import get_colorvalues
 import make_app_ready_results
 import numpy as np
@@ -45,7 +46,7 @@ def analyzer(path):
         # make sure the jpg is RGB, not b&w:
         if rgb_or_not == 'RGB':
             # save down simple averaged pixel_values for baseline model
-            U_baseline.append(get_colorvalues.get_baseline_arr(pixel_values))
+            U_baseline.append(get_colorvalues.get_freq_arr(pixel_values))
             # clusters raw pixel values & keeps just the ones need
             csind, labels, raw_df = cluster.dbscan_indiv_pic(pixel_values,
                                                              epsilon=3,
@@ -66,7 +67,7 @@ def analyzer(path):
     # 2: unpickle clustered/baseline arrays & order for calculations
     filepath = '/Users/colinbottles/Desktop/Cat/school/color-match/data/processed/'
     filename = 'pickled_list_arr'
-    basename = 'pickled_list_arr_baseline'
+    basename = 'pickled_list_arr_freq'
     order = 'pickled_jpg_order'
     list_clusters = transform_final.unpick(filepath+filename)
     list_baseline = transform_final.unpick(filepath+basename)
@@ -112,12 +113,12 @@ def analyzer(path):
     score_comparison = pd.DataFrame(np.column_stack([list_order,
                                                     list_scores_base,
                                                     list_scores_cl,
-                                                    list_hex_arr,
-                                                    list_hex_barr]),
-                                    columns=['jpg_path', 'baseline',
-                                             'clustered', 'hex_clustered',
-                                             'hex_baseline'])
-
+                                                    list_hex_arr]),
+                                    columns=['jpg_path',
+                                             'baseline', 'clustered',
+                                             'hex_clustered'])
+    score_comparison['hex_baseline'] = pd.Series(list_hex_barr,
+                                                 index=score_comparison.index)
     # 7: clean df: convert column format, round if numeric, parse if string
     score_comparison = score_comparison.astype(dtype={"jpg_path": "str",
                                                       "baseline": "float64",
@@ -165,27 +166,29 @@ def analyzer(path):
     # REQUIRES ONLY ONE PHOTO TO BE UPLOADED BY USER VIA WEBAPP
     # de-duplicate hex_codes already in user uploaded clustered palette
     m2sug = score_comparison.query('0.95 <= clustered <= 1.09').sort_values(['clustered']).head(1).hex_clustered.values.tolist()
-
     list_m2sug = []
     for num in range(len(m2sug)):
         entire = m2sug[num].split("['")[-1].split("']")[0].split("', '")
         deduped = [x for x in entire if x not in list_hex_uploaded_arr]
         list_m2sug.append(deduped)
     # FOR PRESENTATION ONLY: WHY NOT GO WITH SIMPLE BASELINE?
-        ''' there is no similar comparison for baseline score, right???
-            because this is pure euclidean distance from one ave RGB to another
-        '''
+    bentire2 = score_comparison.query('0.95 <= baseline <= 1.09').sort_values(['baseline']).head(1).hex_baseline.values.tolist()
+    # de-duplicate hex_codes already in user uploaded baseline palette
+    list_bsug2 = []
+    for num in range(len(bentire2)):
+        entire = bentire2[num].split("['")[-1].split("']")[0].split("', '")
+        deduped = [x for x in entire if x not in list_hex_uploaded_barr]
+        list_bsug2.append(entire)
 
     # 9A: create dynamic html ready tables for suggested palettes
     # using lowest score(s)
-    colors1 = make_app_ready_results.table_ready_2loops(list_msug)
+    colors1 = make_app_ready_results.table_ready_2loops(list_bsug2)
     sugg1 = make_app_ready_results.html_ready(list_col1=colors1,
                                               name_col1='colors',
                                               dtype_col1='str',
-                                              list_col2=list_msug[0],
+                                              list_col2=list_bsug2[0],
                                               name_col2='codes',
                                               dtype_col2='str')
-    # sugg1 = sorted(sugg1, key=itemgetter('name_col1'), reverse=False)
 
     # using score(s) around 1
     colors2 = make_app_ready_results.table_ready_2loops(list_m2sug)
@@ -195,7 +198,6 @@ def analyzer(path):
                                               list_col2=list_m2sug[0],
                                               name_col2='codes',
                                               dtype_col2='str')
-    # sugg2 = sorted(sugg2, key=itemgetter('name_col1'), reverse=False)
 
     # 9B: create dynamic html ready table for user uploaded base palette
     colorsb = make_app_ready_results.table_ready_1loop(list_hex_uploaded_arr)
@@ -205,10 +207,18 @@ def analyzer(path):
                                               list_col2=list_hex_uploaded_arr,
                                               name_col2='codes',
                                               dtype_col2='str')
-    # suggb = sorted(suggb, key=itemgetter('name_col1'), reverse=False)
+
+    # 9C: create dynamic html ready table for user uploaded base palette
+    colorsbf = make_app_ready_results.table_ready_1loop(list_hex_uploaded_barr)
+    suggbf = make_app_ready_results.html_ready(list_col1=colorsbf,
+                                              name_col1='colors',
+                                              dtype_col1='str',
+                                              list_col2=list_hex_uploaded_barr,
+                                              name_col2='codes',
+                                              dtype_col2='str')
 
     # 10: RETURN!!
-    return clustered_prediction, baseline_prediction, sugg1, sugg2, suggb
+    return clustered_prediction, suggbf, sugg1, sugg2[::2], suggb[::33]
 
     '''WHAT I WANT TO SHOW ON WEBAPP
 

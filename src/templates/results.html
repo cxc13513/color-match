@@ -11,44 +11,45 @@
 
 <body>
 
-    <h1><strong>Naturally Appealing Palettes Suggestions</strong></h1>
-
-    <h1>Suggested complimentary palette (score ~ 1)</h1>
-
-    <table cellpadding="1" bordercolor="#FFFFFF" bordercolorlight="#FFFFFF">
-    <thead><tr><th width='60'></th></tr></thead>
-    <tbody>
-    {% for row in sugg2 %}
-        <tr height='60'><td style={{ row['name_col1'] }}></td><td>{{ row['name_col2'] }}</td></tr>
-    {% endfor %}
-    </tbody>
-    </table>
-
-    <h1>Your uploaded base palette</h1>
-
-    <table cellpadding="1" bordercolor="#FFFFFF" bordercolorlight="#FFFFFF">
-    <thead><tr><th width='60'></th><th></th></tr></thead>
+    <h1>Your clustered base color palette</h1>
+    <table>
+    <thead><tr><th width='240'></th><th></th><th></th></tr></thead>
     <tbody>
     {% for row in suggb %}
-        <tr height='60'><td style={{ row['name_col1'] }}></td><td>{{ row['name_col2'] }}</td></tr>
+        <tr height='20'><td style={{ row['name_col1'] }}></td><td></td><td>{{ row['name_col2'] }}</td></tr>
     {% endfor %}
     </tbody>
     </table>
 
-    <h1>Suggested complimentary palette (score ~ 0)</h1>
+    <h1>Your baseline base color palette</h1>
+    <table>
+    <thead><tr><th width='240'></th><th></th><th></th></tr></thead>
+    <tbody>
+    {% for row in suggbf %}
+        <tr height='20'><td style={{ row['name_col1'] }}></td><td></td><td>{{ row['name_col2'] }}</td></tr>
+    {% endfor %}
+    </tbody>
+    </table>
 
-    <table cellpadding="1" bordercolor="#FFFFFF" bordercolorlight="#FFFFFF">
-    <thead><tr><th width='60'></th><th></th></tr></thead>
+    <h1>Baseline color ideas</h1>
+    <table>
+    <thead><tr><th width='240'></th><th></th><th></th></tr></thead>
     <tbody>
     {% for row in sugg1 %}
-        <tr height='60'><td style={{ row['name_col1'] }}></td><td>{{ row['name_col2'] }}</td></tr>
+        <tr height='20'><td style={{ row['name_col1'] }}></td><td></td><td>{{ row['name_col2'] }}</td></tr>
     {% endfor %}
     </tbody>
     </table>
 
-    <h1>Prediction</h1>
-    <p>{{ clust_pred }}</p>
-    <p>{{ base_pred }}</p>
+    <h1>Complementary color ideas</h1>
+    <table>
+    <thead><tr><th width='240'></th><th></th><th></th></tr></thead>
+    <tbody>
+    {% for row in sugg2 %}
+        <tr height='20'><td style={{ row['name_col1'] }}></td><td></td><td>{{ row['name_col2'] }}</td></tr>
+    {% endfor %}
+    </tbody>
+    </table>
 
 </body>
 
