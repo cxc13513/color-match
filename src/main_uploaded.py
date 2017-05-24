@@ -1,5 +1,4 @@
 import cluster
-import colorsys
 import get_colorvalues
 import make_app_ready_results
 import numpy as np
@@ -49,8 +48,8 @@ def analyzer(path):
             U_baseline.append(get_colorvalues.get_freq_arr(pixel_values))
             # clusters raw pixel values & keeps just the ones need
             csind, labels, raw_df = cluster.dbscan_indiv_pic(pixel_values,
-                                                             epsilon=3,
-                                                             min_clust_size=10,
+                                                             epsilon=2.75,
+                                                             min_clust_size=60,
                                                              algo='ball_tree',
                                                              dist_metric='euclidean',
                                                              num_jobs=2,
@@ -172,7 +171,7 @@ def analyzer(path):
         deduped = [x for x in entire if x not in list_hex_uploaded_arr]
         list_m2sug.append(deduped)
     # FOR PRESENTATION ONLY: WHY NOT GO WITH SIMPLE BASELINE?
-    bentire2 = score_comparison.query('0.95 <= baseline <= 1.09').sort_values(['baseline']).head(1).hex_baseline.values.tolist()
+    bentire2 = score_comparison.query('0.95 <= baseline <= 1.23').sort_values(['baseline']).head(1).hex_baseline.values.tolist()
     # de-duplicate hex_codes already in user uploaded baseline palette
     list_bsug2 = []
     for num in range(len(bentire2)):
@@ -218,7 +217,7 @@ def analyzer(path):
                                               dtype_col2='str')
 
     # 10: RETURN!!
-    return clustered_prediction, suggbf, sugg1, sugg2[::2], suggb[::33]
+    return clustered_prediction, suggbf, sugg1, sugg2[::2], suggb[::20]
 
     '''WHAT I WANT TO SHOW ON WEBAPP
 
