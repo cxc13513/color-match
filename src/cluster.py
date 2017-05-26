@@ -62,16 +62,15 @@ def dbscan_indiv_pic(pixel_values, epsilon, min_clust_size,
         return core_sample_indices, db.labels_, df
 
 
-def plot_3dclusters(db, df, plot_dbscan=False):
+def plot_3dclusters(csind, labels, df, plot_dbscan=False):
     '''optional plotting: - 3D scatter of DBSCAN-clusters vs. noise'''
     if plot_dbscan is True:
         # finds unique clusters & adds to df
-        labels = db.labels_
         df['cluster_num'] = pd.Series(labels.tolist()).values
         unique_labels = set(labels)
         # create mask for whether obvs is a core sample
-        core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
-        core_samples_mask[db.core_sample_indices_] = True
+        core_samples_mask = np.zeros_like(labels, dtype=bool)
+        core_samples_mask[csind] = True
         # convert df to np array
         X = np.array(df)
         # Assigns diff colors to each unique cluster & uses black for noise
