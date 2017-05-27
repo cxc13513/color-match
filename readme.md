@@ -14,18 +14,24 @@ Slide deck: Presentation-Deck.pdf
 Main/Helper scripts, in order need to run, in src folder:
 
 1. Scrape photos from site & save down locally as jpegs
-    main:       saved_scraped.py
-    helper:     scraper.py
+    - main:
+            - saved_scraped.py
+    - helper:
+            - scraper.py
 
 2. Create dataset from jpegs, pickle & save locally
-    main:       main_data.py
-    helpers:    cluster.py
-                get_colorvalues.py
-                save_scraped.py
-                transform_final.py
+    - main:
+            - main_data.py
+    - helpers:
+            - cluster.py
+            - get_colorvalues.py
+            - save_scraped.py
+            - transform_final.py
 
 3. Set up locally hosted web app & user interface
-    main:       webapp.py
-    helpers:    main_uploaded.py
-                templates/index.html
-                templates/results.html
+    - main:       
+            - webapp.py
+    - helpers:    
+            - main_uploaded.py
+            - templates/index.html
+            - templates/results.html
