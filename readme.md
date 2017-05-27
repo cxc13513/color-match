@@ -7,8 +7,8 @@ This customization was critical, given my experience, because weeding out the ir
 My project was built in Python and primarily employed web scraping, creative data transformation techniques, DBSCAN clustering, and silhouette scoring for the validation/modeling and flask for the front-end user interface.
 
 
-Link to youtube of presentation (6:20 minute start): https://youtu.be/jyg6dzS37PQ
-Slide deck: Presentation-Deck.pdf
+- Link to youtube of presentation (6:20 minute start): https://youtu.be/jyg6dzS37PQ
+- Slide deck: Presentation-Deck.pdf
 
 
 Main/helper scripts, in order need to run, in src folder:
